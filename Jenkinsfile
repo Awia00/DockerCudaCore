@@ -5,8 +5,9 @@ node('docker&&linux') {
 
     stage('Fetch') {
         checkout scm
-        docker.pull('ubuntu:18.04') // Fetch newest ubuntu image.
-        docker.pull('microsoft/aspnetcore:2.0')
+
+        docker.image('ubuntu:18.04').pull()
+        docker.image('microsoft/aspnetcore:2.0').pull()
     }
     stage('Base') {
         cudaBase = docker.build('cuda:9.1-base-ubuntu18.04', '-f dockerfiles/Dockerfile.base .')
