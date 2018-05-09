@@ -2,8 +2,8 @@ properties([
     buildDiscarder(logRotator(numToKeepStr: '2')),
     disableConcurrentBuilds(),
     parameters([
-        string(defaultValue: '', description: 'The registry URL', name: 'REGISTRY_URL', trim: false),
-        string(defaultValue: '', description: 'The ID of the credentials for the registry specified in REGISTRY_URL.', name: 'REGISTRY_CREDENTIALS_ID', trim: false)
+        string(defaultValue: 'https://registry.mikaellindemann.dk', description: 'The registry URL', name: 'REGISTRY_URL'),
+        string(defaultValue: 'Awia-Registry', description: 'The Jenkins ID of the credentials for the registry specified in REGISTRY_URL.', name: 'REGISTRY_CREDENTIALS_ID')
     ])
 ])
 
