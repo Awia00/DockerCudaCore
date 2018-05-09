@@ -1,5 +1,10 @@
 properties([
-    buildDiscarder(logRotator(numToKeepStr: '2'))
+    buildDiscarder(logRotator(numToKeepStr: '2')),
+    disableConcurrentBuilds(),
+    parameters([
+        string(defaultValue: '', description: 'The registry URL', name: 'REGISTRY_URL', trim: false),
+        string(defaultValue: '', description: 'The ID of the credentials for the registry specified in REGISTRY_URL.', name: 'REGISTRY_CREDENTIALS_ID', trim: false)
+    ])
 ])
 
 node('docker&&linux') {
@@ -23,14 +28,16 @@ node('docker&&linux') {
         cudaAsp = docker.build('aspnetcore:2.0-cuda', '-f dockerfiles/Dockerfile.aspnetcore .')
     }
     stage('Push') {
-        if (env.BRANCH_NAME == 'master') {
-            cudaBase.push()
-            cudaDevel.push()
-            cudaAsp.push()
-        } else {
-            cudaBase.push("cuda:9.1-base-ubuntu18.04-${env.BRANCH_NAME}")
-            cudaDevel.push("cuda:9.1-devel-ubuntu18.04-${env.BRANCH_NAME}")
-            cudaAsp.push("aspnetcore:2.0-cuda-${env.BRANCH_NAME}")
+        docker.withRegistry($REGISTRY_URL, $REGISTRY_CREDENTIALS_ID) {
+            if (env.BRANCH_NAME == 'master') {
+                cudaBase.push()
+                cudaDevel.push()
+                cudaAsp.push()
+            } else {
+                cudaBase.push("cuda:9.1-base-ubuntu18.04-${env.BRANCH_NAME}")
+                cudaDevel.push("cuda:9.1-devel-ubuntu18.04-${env.BRANCH_NAME}")
+                cudaAsp.push("aspnetcore:2.0-cuda-${env.BRANCH_NAME}")
+            }
         }
     }
 }
