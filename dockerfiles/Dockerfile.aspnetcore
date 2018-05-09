@@ -1,10 +1,15 @@
 FROM cuda:9.1-base-ubuntu18.04
 
-RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg && \
+RUN apt-get update && \
+    apt-get install -y wget apt-https-transport && \
+    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg && \
     mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/ && \
     wget -q https://packages.microsoft.com/config/ubuntu/18.04/prod.list && \
     mv prod.list /etc/apt/sources.list.d/microsoft-prod.list && \
-    apt-get update && \
+    apt-get remove wget apt-https-transport && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && \
     apt-get install -y dotnet-runtime-2.1.0-rc1 && \
     rm -rf /var/lib/apt/lists/*
 
