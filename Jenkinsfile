@@ -28,7 +28,7 @@ node('docker&&linux') {
         cudaAsp = docker.build('aspnetcore:2.0-cuda', '-f dockerfiles/Dockerfile.aspnetcore .')
     }
     stage('Push') {
-        docker.withRegistry($REGISTRY_URL, $REGISTRY_CREDENTIALS_ID) {
+        docker.withRegistry(params.REGISTRY_URL, params.REGISTRY_CREDENTIALS_ID) {
             if (env.BRANCH_NAME == 'master') {
                 cudaBase.push()
                 cudaDevel.push()
