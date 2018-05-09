@@ -1,3 +1,7 @@
+properties([
+    buildDiscarder(logRotator(numToKeepStr: '2'))
+])
+
 node('docker&&linux') {
     def cudaBase
     def cudaDevel
@@ -20,9 +24,11 @@ node('docker&&linux') {
     }
     stage('Push') {
         if (env.BRANCH_NAME == 'master') {
+            cudaBase.push()
             cudaDevel.push()
             cudaAsp.push()
         } else {
+            cudaBase.push("cuda:9.1-base-ubuntu18.04-${env.BRANCH_NAME}")
             cudaDevel.push("cuda:9.1-devel-ubuntu18.04-${env.BRANCH_NAME}")
             cudaAsp.push("aspnetcore:2.0-cuda-${env.BRANCH_NAME}")
         }
