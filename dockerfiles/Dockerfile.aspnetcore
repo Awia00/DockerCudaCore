@@ -1,8 +1,10 @@
 FROM cuda:9.1-base-ubuntu18.04
 
-RUN echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-bionic-prod bionic main" > /etc/apt/sources.list.d/dotnet.list && \
-apt-get update && \
-apt-get install -y dotnet-runtime-2.0.7 && \
-rm -rf /var/lib/apt/lists/*
+RUN sudo apt-key adv --keyserver packages.microsoft.com --recv-keys EB3E94ADBE1229CF && \
+    sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893 && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-bionic-prod bionic main" > /etc/apt/sources.list.d/dotnet.list && \
+    apt-get update && \
+    apt-get install -y dotnet-runtime-2.0.7 && \
+    rm -rf /var/lib/apt/lists/*
 
 CMD ["/bin/sh"]
