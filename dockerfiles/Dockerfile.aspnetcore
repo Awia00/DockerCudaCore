@@ -10,7 +10,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends dotnet-runtime-2.0.7 && \
+    apt-get install -y --no-install-recommends dotnet-hosting-2.0.8 && \
     rm -rf /var/lib/apt/lists/*
 
 CMD ["/bin/sh"]
