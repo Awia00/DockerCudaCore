@@ -8,38 +8,22 @@ properties([
 ])
 
 node('docker&&linux') {
-    def cudaBase
-    def cudaDevel
     def cudaAsp
 
     stage('Fetch') {
         checkout scm
 
-        docker.image('ubuntu:18.04').pull()
+        docker.image('nvidia/cuda:9.2-ubuntu18.04').pull()
     }
-    stage('Base') {
-        cudaBase = docker.build('cuda:9.1-base-ubuntu18.04', '-f dockerfiles/Dockerfile.base .')
-    }
-    parallel devel: {
-        stage('Devel') {
-            cudaDevel = docker.build('cuda:9.1-devel-ubuntu18.04', '-f dockerfiles/Dockerfile.devel .')
-        }
-    },
-    asp: {
-        stage('AspNetCore') {
-            cudaAsp = docker.build('aspnetcore:2.0-cuda', '-f dockerfiles/Dockerfile.aspnetcore .')
-        }
+    stage('AspNetCore') {
+        cudaAsp = docker.build('aspnetcore:2.0-cuda-9.2', '-f dockerfiles/Dockerfile.aspnetcore .')
     }
     stage('Push') {
         docker.withRegistry(params.REGISTRY_URL, params.REGISTRY_CREDENTIALS_ID) {
             if (env.BRANCH_NAME == 'master') {
-                cudaBase.push()
-                cudaDevel.push()
                 cudaAsp.push()
             } else {
-                cudaBase.push("cuda:9.1-base-ubuntu18.04-${env.BRANCH_NAME}")
-                cudaDevel.push("cuda:9.1-devel-ubuntu18.04-${env.BRANCH_NAME}")
-                cudaAsp.push("aspnetcore:2.0-cuda-${env.BRANCH_NAME}")
+                cudaAsp.push("aspnetcore:2.0-cuda-9.2-${env.BRANCH_NAME}")
             }
         }
     }
