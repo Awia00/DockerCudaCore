@@ -27,7 +27,7 @@ node('docker&&linux') {
     },
     asp: {
         stage('AspNetCore') {
-            cudaAsp = docker.build('aspnetcore:2.0-cuda', '-f dockerfiles/Dockerfile.aspnetcore .')
+            cudaAsp = docker.build('aspnetcore:2.0-cuda-9.1', '-f dockerfiles/Dockerfile.aspnetcore .')
         }
     }
     stage('Push') {
@@ -39,7 +39,7 @@ node('docker&&linux') {
             } else {
                 cudaBase.push("cuda:9.1-base-ubuntu18.04-${env.BRANCH_NAME}")
                 cudaDevel.push("cuda:9.1-devel-ubuntu18.04-${env.BRANCH_NAME}")
-                cudaAsp.push("aspnetcore:2.0-cuda-${env.BRANCH_NAME}")
+                cudaAsp.push("aspnetcore:2.0-cuda-9.1-${env.BRANCH_NAME}")
             }
         }
     }
