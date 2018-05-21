@@ -13,7 +13,7 @@ node('docker&&linux') {
     stage('Fetch') {
         checkout scm
 
-        docker.image('nvidia/cuda:9.2-base-ubuntu18.04').pull()
+        docker.image('nvidia/cuda:9.2-ubuntu18.04').pull()
     }
     stage('AspNetCore') {
         cudaAsp = docker.build('aspnetcore:2.0-cuda-9.2', '-f dockerfiles/Dockerfile.aspnetcore .')
